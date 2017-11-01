@@ -24,6 +24,7 @@ public class unbalancedBSTree {
 
     }
 
+    //deletes the node with a desired key
     public boolean delete(int key) {
         Node node_to_delete = this.find(root,key);
         if(node_to_delete==null) {
@@ -37,9 +38,9 @@ public class unbalancedBSTree {
                 return true;
             }
 
-            //if node has 2 child
+            //if node has 2 children
             else if(node_to_delete.left!=null && node_to_delete.right!=null){
-                
+                node_to_delete = replace_parent_node_with_leftmost_node(node_to_delete);
                 return true;
             }
 
@@ -55,20 +56,42 @@ public class unbalancedBSTree {
 
         }
     }
-    //TODO: need a min funciton to find the min node in a subtree
 
-    public Node find(Node root,int value) {
-        if(root.key==value || root == null) {
+    //finds the leftmost node of a tree
+    public Node find_min(Node root) {
+        if(root.left==null) {
             return root;
         }
-        else if (value<root.key){
-            return this.find(root.left,value);
+        else {
+            return this.find_min(root.left);
+        }
+    }
+
+    public Node replace_parent_node_with_leftmost_node(Node node_to_del){
+        Node leftmost_node = find_min(node_to_del.right);
+        if(leftmost_node.right!=null){
+            Node temp_node = leftmost_node;
+            leftmost_node = leftmost_node.right;
+            return temp_node;
+        }
+        return leftmost_node;
+    }
+
+    //recursively find a node;
+    public Node find(Node root, int key){
+        if(root.key==key || root == null){
+            return root;
+        }
+
+        else if(root.key>key){
+             return this.find(root.left,key);
         }
 
         else {
-            return this.find(root.right,value);
+            return this.find(root.right,key);
         }
-
     }
 
+
+    //TODO: verification(?) and traversal functions/methods
 }
